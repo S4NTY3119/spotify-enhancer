@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "spotify ex-enhancer",
+  "version": "1.0",
+  "description": "Maintains constant maximum volume on Spotify and attempts to block unexpected pauses.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Spotify Ex-Enhancer"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.spotify.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["*://*.spotify.com/*"]
+    }
+  ]
+}

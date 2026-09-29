@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Ex-Enhancer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      width: 340px;
+      overflow-x: hidden;
+    }
+
+    .header {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #fff;
+    }
+
+    .subtitle {
+      font-size: 9.5px;
+      color: #555;
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid #333;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      transition: all 0.3s;
+    }
+
+    .status-pill.active {
+      border-color: #fff;
+    }
+
+    .status-pill.inactive {
+      border-color: #333;
+      color: #555;
+    }
+
+    .pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-pill.active .pulse {
+      animation: pulse 1.8s ease infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .stat-card {
+      padding: 14px 16px;
+      position: relative;
+    }
+
+    .stat-card:first-child {
+      border-right: 1px solid #1a1a1a;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: #444;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 9px;
+      color: #333;
+      margin-top: 4px;
+    }
+
+
+    .features {
+      border-bottom: 1px solid #1a1a1a;
+      padding: 4px 0;
+    }
+
+    .feature-row {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #111;
+    }
+
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .feature-text {
+      font-size: 11.5px;
+      color: #aaa;
+      flex: 1;
+    }
+
+    .feature-tag {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #333;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Console ── */
+    .console-section {
+      padding: 12px 16px;
+    }
+
+    .console-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .console-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: #444;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .btn-clear {
+      background: none;
+      border: 1px solid #222;
+      color: #444;
+      font-size: 9px;
+      font-family: 'Inter', sans-serif;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-clear:hover {
+      border-color: #555;
+      color: #aaa;
+    }
+
+    .console-box {
+      background: #080808;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      height: 170px;
+      overflow-y: auto;
+      padding: 10px;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .console-box::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .console-box::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .console-box::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 4px;
+    }
+
+    .log-line {
+      display: flex;
+      gap: 7px;
+      padding: 1px 0;
+    }
+
+    .log-time {
+      color: #2a2a2a;
+      flex-shrink: 0;
+    }
+
+    .log-badge {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    .log-badge.info {
+      border: 1px solid #2a2a2a;
+      color: #555;
+    }
+
+    .log-badge.block {
+      border: 1px solid #444;
+      color: #888;
+    }
+
+    .log-badge.resume {
+      border: 1px solid #666;
+      color: #ccc;
+    }
+
+    .log-badge.error {
+      border: 1px solid #555;
+      color: #999;
+    }
+
+    .log-msg {
+      color: #444;
+      word-break: break-word;
+    }
+
+    .log-msg.block {
+      color: #777;
+    }
+
+    .log-msg.resume {
+      color: #bbb;
+    }
+
+    .log-msg.error {
+      color: #666;
+    }
+
+    .log-msg.info {
+      color: #555;
+    }
+
+    .empty-console {
+      color: #2a2a2a;
+      text-align: center;
+      margin-top: 45px;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 9px 16px;
+      border-top: 1px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-note {
+      font-size: 9px;
+      color: #333;
+    }
+
+    .hint {
+      font-size: 9px;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    .hint.hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div class="header">
+    <div class="title-row">
+      <div class="logo">🎵</div>
+      <div>
+        <div class="title">spotify ex-enhancer</div>
+        <div class="subtitle">volume lock · anti-pause</div>
+      </div>
+    </div>
+    <div id="statusPill" class="status-pill inactive">
+      <div class="pulse"></div>
+      <span id="statusText">inactive</span>
+    </div>
+  </div>
+
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Volume Blocks</div>
+      <div class="stat-value" id="volumeCount">0</div>
+      <div class="stat-sub">forced back to 100%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Discord Resumes</div>
+      <div class="stat-value" id="resumeCount">0</div>
+      <div class="stat-sub">auto-resumed</div>
+    </div>
+  </div>
+
+
+  <div class="features">
+    <div class="feature-row">
+      <div class="feature-dot"></div>
+      <div class="feature-text">Volume locked at 100% at all times</div>
+      <div class="feature-tag">ON</div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-dot"></div>
+      <div class="feature-text">Auto-resume on Discord pause</div>
+      <div class="feature-tag">ON</div>
+    </div>
+  </div>
+
+
+  <div class="console-section">
+    <div class="console-header">
+      <div class="console-title">Debug Console</div>
+      <button class="btn-clear" id="clearBtn">Clear</button>
+    </div>
+    <div class="console-box" id="consoleBox">
+      <div class="empty-console">no logs yet<br>refresh your spotify tab</div>
+    </div>
+  </div>
+
+
+  <div class="footer">
+    <div class="footer-note">works on *.spotify.com • An extension by S4NTY3119</div>
+    <div class="hint hidden" id="hint">↻ refresh spotify tab</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
